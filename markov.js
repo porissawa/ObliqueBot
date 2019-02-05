@@ -1,39 +1,41 @@
 const fs = require('fs')
 
 let txt = []
-const order = 6
+const order = 4
 let ngrams = {}
+let beginnings = []
 
 //populate txt array with lines from cards.txt
 let array = fs.readFileSync('cards.txt').toString().split("\n")
-for(i in array) {
-    txt += " " + array[i]
-}
 
-for (i = 0; i <= txt.length - order; i++) {
-    var gram = txt.substring(i, i + order)
-    if(!ngrams[gram]) {
-        ngrams[gram] = []
+for(j = 0; j < array.length; j++) {
+    let txt = array[j]
+    for (i = 0; i <= txt.length - order; i++) {
+        let gram = txt.substring(i, i + order)
+        if (i === 0) {
+            beginnings.push(gram)
+        }
+        if(!ngrams[gram]) {
+            ngrams[gram] = []
+        }
+        ngrams[gram].push(txt.charAt(i + order))
     }
-    ngrams[gram].push(txt.charAt(i + order))
 }
-
-// console.log(ngrams)
 
 markovIt = () => {
-    let currentGram = txt.substring(0, order)
+    let beginningi = Math.floor(Math.random() * Math.floor(beginnings.length))
+    let currentGram = beginnings[beginningi]
     let result = currentGram
-
     for(i = 0; i < 26; i++) {
-    let possibilities = ngrams[currentGram]
-    if(!possibilities) {
-        break
-    }
-    let nexti = Math.floor(Math.random() * Math.floor(possibilities.length))
-    let next = possibilities[nexti]
-    result += next
-    let len = result.length
-    currentGram = result.substring(len - order, len)
+        let possibilities = ngrams[currentGram]
+        if(!possibilities) {
+            break
+        }
+        let nexti = Math.floor(Math.random() * Math.floor(possibilities.length))
+        let next = possibilities[nexti]
+        result += next
+        let len = result.length
+        currentGram = result.substring(len - order, len)
     }
     console.log(result)
 }
