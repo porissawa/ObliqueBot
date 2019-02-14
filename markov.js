@@ -1,6 +1,5 @@
 const fs = require('fs')
 
-let txt = []
 const order = 4
 let ngrams = {}
 let beginnings = []
